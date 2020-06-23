@@ -23,15 +23,15 @@ class App extends Component {
 	}
 
 	computeDisplay(word, usedLetters) {
-		console.log(word);
-		console.log(usedLetters);
 		return word.replace(/\w/g, (letter) => (usedLetters.has(letter) ? letter : '_'));
 	}
 
-	// autobind with react autobind
+	// autobind with react autobind library
 	play(event) {
-		if (/[A-Za-z]/.test(event.key)) {
-			this.setState((prevState) => prevState.usedLetters.add(event.key));
+		const key = event.key.toUpperCase();
+
+		if (/[A-Z]/.test(key)) {
+			this.setState((prevState) => prevState.usedLetters.add(key));
 		}
 	}
 
@@ -52,11 +52,7 @@ class App extends Component {
 		return (
 			<div className="App">
 				{displayWord.split('').map((item, index) => {
-					if (item === '_') {
-						return <span key={index}>{item}</span>;
-					}
-
-					return item;
+					return <span key={index}>{item}</span>;
 				})}
 			</div>
 		);
