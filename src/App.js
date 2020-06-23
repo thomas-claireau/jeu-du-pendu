@@ -11,6 +11,8 @@ class App extends Component {
 		this.state = {
 			word: this.filterWord(faker.random.word()),
 			usedLetters: new Set(),
+			countTest: 0,
+			limitTest: 15,
 		};
 	}
 
@@ -30,9 +32,45 @@ class App extends Component {
 	play(event) {
 		const key = event.key.toUpperCase();
 
-		if (/[A-Z]/.test(key)) {
-			this.setState((prevState) => prevState.usedLetters.add(key));
+		if (/^[A-Z]+$/.test(key) && key.length === 1 && !this.state.lose && !this.state.win) {
+			this.setState((prevState) => ({ usedLetters: prevState.usedLetters.add(key) }));
+			this.setState((prevState) => ({ countTest: prevState.countTest++ }));
 		}
+
+		this.setGameStatus();
+	}
+
+	generateLetters(word, usedLetters) {
+		usedLetters = [...usedLetters];
+		word = word.split('');
+
+		return (
+			<div className="letters">
+				Lettres utilisées :
+				{usedLetters.map((item, index) => {
+					return (
+						<span key={index} className={word.includes(item) ? 'success' : 'error'}>
+							{item}
+						</span>
+					);
+				})}
+			</div>
+		);
+	}
+
+	generateCount(count) {
+		return <div className="count">Nombre de tentatives : {count}</div>;
+	}
+
+	generateLimit(limit) {
+		return <div className="limit">Nombre d'essais max : {limit}</div>;
+	}
+
+	setGameStatus() {
+		this.setState((prevState) => ({
+			lose: prevState.countTest >= prevState.limitTest,
+			win: !this.computeDisplay(prevState.word, prevState.usedLetters).includes('_'),
+		}));
 	}
 
 	// add event listener keydown
@@ -46,14 +84,22 @@ class App extends Component {
 	}
 
 	render() {
-		const { word, usedLetters } = this.state;
+		const { word, usedLetters, limitTest, countTest } = this.state;
 		const displayWord = this.computeDisplay(word, usedLetters);
+
+		// this.generateLetters(usedLetters);
 
 		return (
 			<div className="App">
 				{displayWord.split('').map((item, index) => {
 					return <span key={index}>{item}</span>;
 				})}
+				{this.generateLetters(word, usedLetters)}
+				{this.generateLimit(limitTest)}
+				{this.generateCount(countTest)}
+
+				{this.state.win && <div className="result">Gagné!</div>}
+				{this.state.lose && <div className="result">Perdu!</div>}
 			</div>
 		);
 	}
