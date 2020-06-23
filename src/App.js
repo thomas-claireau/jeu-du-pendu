@@ -30,10 +30,10 @@ class App extends Component {
 
 	// autobind with react autobind library
 	play(event) {
-		const key = event.key.toUpperCase();
+		const KEY = event.key.toUpperCase();
 
-		if (/^[A-Z]+$/.test(key) && key.length === 1 && !this.state.lose && !this.state.win) {
-			this.setState((prevState) => ({ usedLetters: prevState.usedLetters.add(key) }));
+		if (/^[A-Z]+$/.test(KEY) && KEY.length === 1 && !this.state.lose && !this.state.win) {
+			this.setState((prevState) => ({ usedLetters: prevState.usedLetters.add(KEY) }));
 			this.setState((prevState) => ({ countTest: prevState.countTest++ }));
 		}
 
@@ -85,13 +85,11 @@ class App extends Component {
 
 	render() {
 		const { word, usedLetters, limitTest, countTest } = this.state;
-		const displayWord = this.computeDisplay(word, usedLetters);
-
-		// this.generateLetters(usedLetters);
+		const DISPLAY_WORD = this.computeDisplay(word, usedLetters);
 
 		return (
 			<div className="App">
-				{displayWord.split('').map((item, index) => {
+				{DISPLAY_WORD.split('').map((item, index) => {
 					return <span key={index}>{item}</span>;
 				})}
 				{this.generateLetters(word, usedLetters)}
