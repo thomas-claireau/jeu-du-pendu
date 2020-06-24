@@ -3,6 +3,8 @@ import autoBind from 'react-autobind';
 import faker from 'faker';
 import './App.css';
 
+import Canvas from './components/Canvas';
+
 class App extends Component {
 	constructor(props) {
 		super(props);
@@ -12,7 +14,7 @@ class App extends Component {
 			word: this.filterWord(faker.random.word()),
 			usedLetters: new Set(),
 			countTest: 0,
-			limitTest: 15,
+			limitTest: 12,
 		};
 	}
 
@@ -32,7 +34,7 @@ class App extends Component {
 	play(event) {
 		const KEY = event.key.toUpperCase();
 
-		if (/^[A-Z]+$/.test(KEY) && KEY.length === 1 && !this.state.lose && !this.state.win) {
+		if (/^[A-Z]+$/.test(KEY) && KEY.length === 1) {
 			this.setState((prevState) => ({ usedLetters: prevState.usedLetters.add(KEY) }));
 			this.setState((prevState) => ({ countTest: prevState.countTest++ }));
 		}
@@ -73,6 +75,11 @@ class App extends Component {
 		}));
 	}
 
+	// stop update App
+	shouldComponentUpdate() {
+		return !this.state.win && !this.state.lose;
+	}
+
 	// add event listener keydown
 	componentDidMount() {
 		document.addEventListener('keydown', this.play, false);
@@ -92,12 +99,14 @@ class App extends Component {
 				{DISPLAY_WORD.split('').map((item, index) => {
 					return <span key={index}>{item}</span>;
 				})}
+
 				{this.generateLetters(word, usedLetters)}
 				{this.generateLimit(limitTest)}
 				{this.generateCount(countTest)}
-
 				{this.state.win && <div className="result">Gagné!</div>}
 				{this.state.lose && <div className="result">Perdu!</div>}
+
+				<Canvas countTest={this.state.countTest} />
 			</div>
 		);
 	}
