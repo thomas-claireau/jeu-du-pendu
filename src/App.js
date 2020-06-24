@@ -3,8 +3,6 @@ import autoBind from 'react-autobind';
 import faker from 'faker';
 import './App.css';
 
-import Canvas from './components/Canvas';
-
 class App extends Component {
 	constructor(props) {
 		super(props);
@@ -105,8 +103,6 @@ class App extends Component {
 				{this.generateCount(countTest)}
 				{this.state.win && <div className="result">Gagné!</div>}
 				{this.state.lose && <div className="result">Perdu!</div>}
-
-				<Canvas countTest={this.state.countTest} />
 			</div>
 		);
 	}
